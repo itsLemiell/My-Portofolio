@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Afan Fazri | Future Portfolio</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@300;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Spline Viewer Component -->
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer@1.9.59/build/spline-viewer.js"
+    ></script>
+
+    <style>
+      /* --- RESET & VARIABLES --- */
+      :root {
+        --primary: #00f2ea; /* Cyan Neon */
+        --secondary: #ff0055; /* Magenta Neon */
+        --robot-purple: #7c2bff; /* Robot accent */
+        --bg-dark: #050505;
+        --glass-bg: rgba(20, 20, 20, 0.4);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        list-style: none;
+        border: none;
+        outline: none;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        overflow-x: hidden;
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+      }
+
+      /* --- SPLINE BACKGROUND --- */
+      .spline-background {
+        position: fixed;
+        top: 0;
+        right: -10%; /* geser keluar dikit */
+        width: 70%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Overlay agar teks tetap terbaca di atas 3D */
+      .overlay-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.5) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          rgba(0, 0, 0, 0.2) 70%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* --- NAVIGATION --- */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.5rem 8%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+      }
+
+      .logo {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: 2px;
+        cursor: pointer;
+      }
+
+      .logo span {
+        color: var(--primary);
+        text-shadow: 0 0 10px rgba(0, 242, 234, 0.5);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 3rem;
+      }
+
+      .nav-links a {
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        transition: 0.3s;
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--primary);
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        bottom: -5px;
+        left: 0;
+        transition: 0.3s;
+        box-shadow: 0 0 10px var(--primary);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* Hamburger Menu */
+      .hamburg {
+        display: none;
+        font-size: 1.8rem;
+        color: var(--text-main);
+        cursor: pointer;
+      }
+
+      /* --- HERO SECTION --- */
+      section {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        padding: 0 8%;
+        position: relative;
+        pointer-events: none; /* Biarkan mouse interaksi dengan background kecuali di konten */
+      }
+
+      .main-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .content {
+        pointer-events: auto; /* Mengaktifkan kembali klik di area teks */
+        max-width: 650px;
+        padding: 3rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        margin-top: 50px;
+      }
+
+      .content h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 3.5rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      .content h1 span {
+        background: linear-gradient(90deg, var(--primary), var(--robot-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 0 20px rgba(124, 43, 255, 0.15),
+          0 0 30px rgba(0, 242, 234, 0.1);
+      }
+
+      .typewriter {
+        font-size: 1.5rem;
+        color: var(--robot-purple);
+        font-family: "Courier New", monospace;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+
+      .content p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 50px; /* spacing added to separate from social icons */
+      }
+
+      /* Social Links */
+      .social-links {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 50px; /* spacing from paragraph */
+        margin-bottom: 2.5rem;
+      }
+
+      .social-links a {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        border: 1px solid var(--glass-border);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
+        font-size: 1.2rem;
+        transition: 0.4s;
+      }
+
+      .social-links a:hover {
+        background: linear-gradient(90deg, var(--primary), var(--robot-purple));
+        color: #000;
+        box-shadow:
+          0 0 25px var(--robot-purple),
+          0 0 20px var(--primary);
+      }
+
+      /* Button */
+      .btn button {
+        padding: 12px 35px;
+        background: transparent;
+        color: var(--robot-purple);
+        border: 2px solid var(--robot-purple);
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.4s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .btn button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--robot-purple));
+        z-index: -1;
+        transition: 0.4s;
+      }
+
+      .btn button:hover {
+        color: #000;
+        box-shadow:
+          0 0 25px var(--robot-purple),
+          0 0 20px var(--primary);
+      }
+
+      .btn button:hover::before {
+        width: 100%;
+      }
+
+      /* --- MOBILE NAV (Dropdown) --- */
+      .dropdown {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        z-index: 99;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: 0.5s ease-in-out;
+      }
+
+      .dropdown.active {
+        top: 0;
+      }
+
+      .dropdown .links {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .dropdown a {
+        font-size: 2rem;
+        color: var(--text-main);
+        font-weight: 700;
+      }
+
+      .dropdown a:hover {
+        color: var(--primary);
+      }
+
+      .cancel {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        font-size: 2rem;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .cancel:hover {
+        color: var(--secondary);
+        transform: rotate(90deg);
+      }
+
+      /* --- LOADING SCREEN --- */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1s ease;
+        flex-direction: column;
+      }
+
+      .loader-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 1rem;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 991px) {
+        nav {
+          padding: 1.5rem 5%;
+        }
+        section {
+          padding: 0 5%;
+        }
+        .content h1 {
+          font-size: 2.8rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+        .hamburg {
+          display: block;
+        }
+
+        section {
+          flex-direction: column;
+          justify-content: flex-start;
+          padding-top: 120px;
+          align-items: center;
+          text-align: center;
+          height: auto;
+          min-height: 100vh;
+        }
+
+        .content {
+          margin: 0;
+          background: rgba(0, 0, 0, 0.7);
+          padding: 2rem;
+          max-width: 100%;
+          width: 90%;
+          order: 2;
+          margin-top: 20px;
+        }
+
+        .main-container {
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .social-links {
+          justify-content: center;
+          margin-top: 50px; /* ensure spacing on mobile */
+        }
+
+        .content h1 {
+          font-size: 2.2rem;
+          text-align: center;
+        }
+
+        .typewriter {
+          text-align: center;
+        }
+
+        .content p {
+          text-align: center;
+          font-size: 0.95rem;
+        }
+
+        .btn button {
+          width: 100%;
+        }
+
+        /* Sembunyikan gambar static di mobile karena sudah ada 3D background */
+        .image {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Screen -->
+    <div id="loader">
+      <div class="loader-content">
+        <div class="spinner"></div>
+        <p
+          style="
+            color: white;
+            font-family: &quot;Space Grotesk&quot;;
+            letter-spacing: 2px;
+          "
+        >
+          LOADING EXPERIENCE
+        </p>
+      </div>
+    </div>
+
+    <!-- 3D Background Element -->
+    <div class="spline-background">
+      <!-- URL Spline Anda dimasukkan di sini -->
+      <spline-viewer
+        url="https://prod.spline.design/G4JdIt4Poq2PUEam/scene.splinecode"
+      ></spline-viewer>
+    </div>
+
+    <!-- Dark Gradient Overlay (Agar teks terbaca) -->
+    <div class="overlay-gradient"></div>
+
+    <!-- Navigation -->
+    <nav>
+      <div class="logo" data-aos="fade-down" data-aos-duration="1000">
+        AFAN <span>FAZRI</span>
+      </div>
+
+      <div class="nav-links">
+        <a
+          href="index.html"
+          class="active"
+          data-aos="fade-down"
+          data-aos-delay="100"
+          >Home</a
+        >
+        <a href="about.html" data-aos="fade-down" data-aos-delay="200">About</a>
+        <a href="skill.html" data-aos="fade-down" data-aos-delay="300"
+          >Skills</a
+        >
+        <a href="service.html" data-aos="fade-down" data-aos-delay="400"
+          >Service</a
+        >
+        <a href="contact.html" data-aos="fade-down" data-aos-delay="500"
+          >Contact</a
+        >
+      </div>
+
+      <i class="fa-solid fa-bars hamburg" onclick="toggleMenu()"></i>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="dropdown">
+      <i class="fa-solid fa-xmark cancel" onclick="toggleMenu()"></i>
+      <div class="links">
+        <a href="index.html" onclick="toggleMenu()">Home</a>
+        <a href="about.html" onclick="toggleMenu()">About</a>
+        <a href="skill.html" onclick="toggleMenu()">Skills</a>
+        <a href="service.html" onclick="toggleMenu()">Service</a>
+        <a href="contact.html" onclick="toggleMenu()">Contact</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <section>
+      <div class="main-container">
+        <div class="content">
+          <h1
+            data-aos="fade-right"
+            data-aos-duration="1200"
+            data-aos-delay="600"
+          >
+            Hello, I'm <br />
+            <span>AFAN FAZRI</span>
+          </h1>
+
+          <div class="typewriter" data-aos="fade-right" data-aos-delay="800">
+            I'm a <span class="type-text"></span><span class="cursor">|</span>
+          </div>
+
+          <p data-aos="fade-up" data-aos-delay="1000">
+            Selamat datang di portofolio digital saya. Saya menciptakan
+            pengalaman web yang imersif dan interaktif, menggabungkan desain
+            kreatif dengan teknologi modern. Scroll atau geser background untuk
+            melihat dimensi lain.
+          </p>
+
+          <div class="social-links">
+            <a href="#" data-aos="zoom-in" data-aos-delay="1200"
+              ><i class="fa-brands fa-linkedin-in"></i
+            ></a>
+            <a href="#" data-aos="zoom-in" data-aos-delay="1300"
+              ><i class="fa-brands fa-github"></i
+            ></a>
+            <a href="#" data-aos="zoom-in" data-aos-delay="1400"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
+            <a href="#" data-aos="zoom-in" data-aos-delay="1500"
+              ><i class="fa-brands fa-dribbble"></i
+            ></a>
+          </div>
+
+          <div class="btn" data-aos="fade-up" data-aos-delay="1600">
+            <button>Download CV</button>
+          </div>
+        </div>
+
+        <!-- Note: Kolom kanan untuk gambar dihapus karena digantikan oleh 3D Background -->
+      </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      // Initialize AOS Animation
+      AOS.init({
+        offset: 50,
+        duration: 1000,
+        once: true,
+      });
+
+      // Toggle Mobile Menu
+      function toggleMenu() {
+        const dropdown = document.querySelector(".dropdown");
+        dropdown.classList.toggle("active");
+      }
+
+      // Typewriter Effect Logic
+      const typeText = document.querySelector(".type-text");
+      const textList = [
+        "Web Developer",
+        "UI/UX Designer",
+        "Fotografer",
+        "Videografer",
+      ];
+
+      let textIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+
+      const typeEffect = () => {
+        const currentWord = textList[textIndex];
+        const currentChar = currentWord.substring(0, charIndex);
+
+        typeText.textContent = currentChar;
+
+        if (!isDeleting && charIndex < currentWord.length) {
+          // Typing
+          charIndex++;
+          setTimeout(typeEffect, 100);
+        } else if (isDeleting && charIndex > 0) {
+          // Deleting
+          charIndex--;
+          setTimeout(typeEffect, 50);
+        } else {
+          // Word finished or deleted
+          isDeleting = !isDeleting;
+          if (!isDeleting) {
+            textIndex = (textIndex + 1) % textList.length;
+          }
+          setTimeout(typeEffect, isDeleting ? 1000 : 500); // Pause before delete/next word
+        }
+      };
+
+      // Start Typewriter
+      typeEffect();
+
+      // Loader Removal (Menghilangkan loader saat halaman & Spline siap)
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const loader = document.getElementById("loader");
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 1000);
+        }, 1500); // Sedikit delay agar user melihat animasi
+      });
+    </script>
+  </body>
+</html>
